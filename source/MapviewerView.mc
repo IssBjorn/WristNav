@@ -308,6 +308,14 @@ if (startLat == null){
 
 if (generateDest != null && generateRoute == null && Map != null && posnInfo != null) {
 MapArr = WatchUi.loadResource(Rez.JsonData[Map[RoutePick]]);
+toggle = 0;
+if (WatchUi has :getSubscreen){
+var Adraw = WatchUi.loadResource(Rez.Drawables[rtoDrawBW[Aselect]]);
+dc.drawBitmap((gw/2) - 40, gh/2 - 50, Adraw);
+}
+else {
+var Adraw = WatchUi.loadResource(Rez.Drawables[rtoDraw[Aselect]]);
+dc.drawBitmap((gw/2) - 40, gh/2 - 50, Adraw);}
 MapviewerView.GenerateDest();
 }
 
@@ -322,6 +330,7 @@ if (destLat != null && startLat != null){
 
 
 MapArr = WatchUi.loadResource(Rez.JsonData[Map[RoutePick]]);
+toggle = 0;
 if (WatchUi has :getSubscreen){
 var Adraw = WatchUi.loadResource(Rez.Drawables[rtoDrawBW[Aselect]]);
 dc.drawBitmap((gw/2) - 40, gh/2 - 50, Adraw);
