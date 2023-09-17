@@ -1,0 +1,50 @@
+<drawables>
+    <bitmap filename="i.png" id="LauncherIcon"> </bitmap>
+    
+    
+<bitmap filename="menu.png" id="menu" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="menu1.png" id="menu1" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+
+
+<bitmap filename="Anvil smash.png" id="Anvil2" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="Anvil smash Trans.png" id="Tranvil2" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="anvilTrans.png" id="Tranvil1" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="anvil.png" id="Anvil1" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="tick.png" id="tick" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="navigate.png" id="route" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="navigate1.png" id="route1" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="bin.png" id="bin" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="bin1.png" id="bin1" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="zoom.png" id="magnify" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="home.png" id="home" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="pan.png" id="pan" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="poi.png" id="poi" compress="true"><palette disableTransparency="false"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+
+<bitmap filename="zoom1.png" id="magnify1" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="home1.png" id="home1" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="pan1.png" id="pan1" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<bitmap filename="poi1.png" id="poi1" compress="true"><palette disableTransparency="true"> <color>000000</color><color>FFFFFF</color></palette></bitmap>
+
+<drawable-list id="MenuForeground" background="Gfx.COLOR_TRANSPARENT"></drawable-list>
+
+
+    
+</drawables>
