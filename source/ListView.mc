@@ -31,7 +31,9 @@ function timerCallback() as Void {
  
     // Update the view
     function onUpdate(dc) {
-    dc.setColor(Graphics.COLOR_WHITE,  Graphics.COLOR_WHITE);
+    oSBdc = null;
+    oSB = null;
+        dc.setColor(Graphics.COLOR_WHITE,  Graphics.COLOR_WHITE);
   dc.clear();
   dc.setColor(Graphics.COLOR_TRANSPARENT, Graphics.COLOR_WHITE);
    var y = 58;

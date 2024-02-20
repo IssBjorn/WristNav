@@ -40,6 +40,7 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
    
 
     function onHold(clickEvent) as Boolean {
+    add = 0;
     var m = Position.getInfo().position;
 	m = m.toDegrees();
 	startLat = m[0];
@@ -53,15 +54,16 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
        
     }
     
-    function onKeyPressed(){
-    var m = Position.getInfo().position;
-	m = m.toDegrees();
-	startLat = m[0];
-	startLon = m[1];
-    NumPick = 0;
-    zoom = 10;
-    selectedWaypoint = null;
-    MapviewerView.GenerateBitmap();}
+   // function onKeyPressed(){
+    //add = 0;
+   // var m = Position.getInfo().position;
+	//m = m.toDegrees();
+	//startLat = m[0];
+	//startLon = m[1];
+   // NumPick = 0;
+   // zoom = 10;
+   // selectedWaypoint = null;
+   // MapviewerView.GenerateBitmap();}
     
     function onSwipe(swipeEvent) as Boolean
     {    
@@ -80,7 +82,7 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
    
     
     function controlPrev() as Boolean {
-     System.println(setting);
+     //System.println(setting);
     if (toggle != 1){
     if (setting > 0) {
     setting = setting - 1;
@@ -120,23 +122,36 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	    return pushWaypointSelect();}
 	    }
 	else if (setting == 2 && Map != null && NumPick == Map.size()) {
+	oSB = null;
+    oSBdc = null;
+    MapviewerView.saveMapArraysToStorage();
 	generateRoute = 1;
+	
 	RoutePick = 0;
 	route = [];
 	var m = Position.getInfo().position;
 	m = m.toDegrees();
 	startLat = m[0];
 	startLon = m[1];
-	hasit = null;
-    hasit2 = null;
+
+   
+	
     routeToDraw = 1;
-	minDistanceToStart = 2147483647;
-	minDistanceToDest = 2147483647;
+
 	var destination = Application.Storage.getValue("home");
+	startNode = [startLon,startLat];
 	destLat = destination[0];
 	destLon = destination[1];
+	destNode = [destLon,destLat];
+	queue.add(startNode);
+	
+	
+	
 	}
+	
 	else if (setting == 3) {
+	oSB = null;
+    oSBdc = null;
 	var m = Position.getInfo().position;
 	m = m.toDegrees();
 	RoutePick = 0;
@@ -149,6 +164,9 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	
 	else if (setting == 5  && Map != null && NumPick == Map.size()) {
 	if (selectedWaypoint != null) {
+	oSB = null;
+    oSBdc = null;
+    MapviewerView.saveMapArraysToStorage();
 	generateRoute = 1;
 	RoutePick = 0;
 	route = [];
@@ -156,16 +174,15 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	m = m.toDegrees();
 	startLat = m[0];
 	startLon = m[1];
-	hasit = null;
-    hasit2 = null;
+
+
+	
     routeToDraw = 1;
-	minDistanceToStart = 2147483647;
-	minDistanceToDest = 2147483647;
 	var destination = Application.Storage.getValue("waypoint");
 	destLat = destination[id1+1];
 	destLon = destination[id1];
-	}
-	}
+
+	}}
 	
 	else if (setting == 6) {
 	if (selectedWaypoint != null && Map != null && NumPick == Map.size()) {
@@ -191,7 +208,7 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
     }
     
     function controlNext() as Boolean {
-    System.println(setting);
+    //System.println(setting);
     if (toggle != 1) {
       if (setting < 6) {
     setting = setting + 1;
@@ -228,6 +245,9 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	    
 	else if (setting == 2) {
 	if (posnInfo != null  && NumPick == Map.size() && Map != null){
+	 MapviewerView.saveMapArraysToStorage();
+	oSB = null;
+    oSBdc = null;
 	RoutePick = 0;
 	var m = Position.getInfo().position;
 	m = m.toDegrees();
@@ -258,30 +278,35 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
        MapviewerView.GenerateBitmap();}
 	
 	}
-	}
+	
 	
 	else if (setting == 5) {
 	if (route != null && routeToDraw != null && route.size() >= 2) {
 	routeToDraw = null;
 	Application.Storage.setValue("route",route);
 	MapviewerView.GenerateBitmap();
+	NumPick = 0;
     var m = Position.getInfo().position;
 	m = m.toDegrees();
 	startLat = m[0];
 	startLon = m[1];}
-	else if (routeToDraw == null) {
+	
+	else if (routeToDraw == null && Map != null && Map.size() > 0) {
 	routeToDraw = 1; 
+	RoutePick = Map.size();
+	NumPick = 0;
 	if (route == null || route.size() < 2){
 	route = Application.Storage.getValue("route");}
 	MapviewerView.GenerateBitmap();
     var m = Position.getInfo().position;
 	m = m.toDegrees();
 	startLat = m[0];
-	startLon = m[1];}
-	
-	
-	
+	startLon = m[1];
+		}
 	}
+	
+	
+	
 	
 	else if (setting == 6) {
 	if (route != null){
@@ -294,11 +319,12 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	startLon = m[1];
        MapviewerView.GenerateBitmap();
 	}
-	    
-    WatchUi.requestUpdate();
+	  
+
+    }
+        WatchUi.requestUpdate();
         return true;
-    
-    
+   
 	}
 
 
@@ -386,21 +412,21 @@ public function onSelect() as Boolean {
      var thing = list[id];
      
      while (thing.size() > 0) {
-     System.println(thing.size()); 
+     //System.println(thing.size()); 
      thing.remove(thing[0]);
      }
      while (Major.size() > 0){
      Major.remove(Major[0]);}
       thing = list[id+1];
      while (thing.size() > 0) {
-     System.println(thing.size()); 
+    // System.println(thing.size()); 
      thing.remove(thing[0]);
      }
      while (Highways.size() > 0){
      Highways.remove(Highways[0]);}
      NameIndex.remove(load);
      }
-     
+     WatchUi.requestUpdate();
  
        
     }
@@ -475,6 +501,7 @@ public function onSelect() as Boolean {
      for (var k=0; k<Majorarray.size(); k++){
     Map.add(Majorarray[k]);}}
     }
+    
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         WatchUi.pushView(new MapviewerView(), new CountryAddDelegate(), WatchUi.SLIDE_UP);
        
