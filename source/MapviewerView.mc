@@ -58,6 +58,8 @@ var Indexes = [];
 var visited = [];
 //var start = Position.getInfo().position.toDegrees();
  var generateRoute = null;
+  var uxl = null;
+ var uyl = null;
 var startup = null;
 var add = 0;
  var p = null;
@@ -77,10 +79,7 @@ var posOldY = null;
 var router = [];
 var closestToStartY = null;
 var closestToStartX = null;
- var uxl = null;
- var uyl = null;
- var uxr = null;
- var uyb = null;
+
  var circle = 0;
 var closestToDestX = null;
 var closestToDestY = null;
@@ -88,8 +87,7 @@ var c2DIndex = null;
 var c2SIndex = null;
 var currentArr = [];
 var newPath = [];
-  var rtoDraw = [:Tranvil1,:Tranvil2];
-    var rtoDrawBW = [:Anvil1,:Anvil2];
+    var heading2 = Sensor.getInfo().heading;
   var toDraw = [:magnify,:pan,:home,:poi,:menu,:route,:bin];
     var toDrawBW = [:magnify1,:pan1,:home1,:poi1,:menu1,:route1,:bin1];
 //regex for splitting lines (.{1,6000})\[(?=\S*$)
@@ -98,6 +96,7 @@ var midpo = 0;
 var midpoint = null;
     var minDist = tolerance;
     var minIndex = -1;
+
 function initialize() {
         View.initialize();
         
@@ -187,7 +186,7 @@ if (MapArr != null) {
       
       //var pyRot = ((px - gw/2) * Math.sin(heading2) + (py - gh/2) * Math.cos(heading2)) + gh/2;
        //var pxRot = ((px - gw/2) * Math.cos(heading2) - (py - gh/2) * Math.sin(heading2)) + gw/2;
-
+       
   
        if (j == 0){
        pxOld = null;
@@ -306,7 +305,7 @@ for (var f=0; f<Waypoints.size();f+=2){
 
 
 function drawGUI(dc){
-var heading2 = Sensor.getInfo().heading;
+
 
   if (heading2==null||heading2==0){
   heading2 = Activity.getActivityInfo().currentHeading;}
@@ -443,16 +442,31 @@ dc.drawCircle(((gw/6)*5) + (gw/10) - (gw/19)*1.9, gh/5.6, gw/6);
 
 
 function onUpdate(dc) {
- var p = Position.getInfo().position;
+if (heading2 != null && toggle == 1 && setting == 1){
+var m = Position.getInfo().position;
+m = m.toDegrees();
+var ps = m.toString();
+var P = Position.parse(ps,Position.GEO_DEG);
+p = P.getProjectedLocation(heading2, projLocy);
+p = p.toDegrees();
+System.println(p);
+startLat = p[0];
+startLon = p[1];
+	}
+	else if (generateRoute == null && generateDest == null && selectedWaypoint != 1)  {
+ p = Position.getInfo().position;
+ p = p.toDegrees();
+ startLat = p[0];
+ startLon = p[1];
+ }
  View.onUpdate(dc); 
 
 
 
 
-if (Aselect == 1){
-Aselect = 0;}
-else if (Aselect == 0){
-Aselect = 1;}
+
+
+
 
  if (Map != null && NumPick != Map.size()){
    dc.setClip(0, 0, gw, 40);   
@@ -464,34 +478,22 @@ Aselect = 1;}
    
    dc.clearClip();
   
-if (p != null && posnInfo != null) {
-p = p.toDegrees();
-    
+if (p != null && p[0] != 180 && posnInfo != null) {
+
+  
 	
 	if (updatePos == 1 && generateRoute == null){
+    
 	Lon = p[1].toFloat();
 	Lat = p[0].toFloat();
 	updatePos = 0;
 	}
 
-//if (uxl != null){
-//if (uxl >= 120 || uyl >= 120 || uxr <= 120 || uyb <= 120){
-//System.println(uxl + ", " + uyl + ", " + uxr + ", " + uyb);
-//MapviewerView.GenerateBitmap();
-//}
-
-//}
+ 
 
 if (generateDest != null && generateRoute == null && Map != null && posnInfo != null) {
 MapArr = WatchUi.loadResource(Rez.JsonData[Map[RoutePick]]);
 toggle = 0;
-if (WatchUi has :getSubscreen){
-var Adraw = WatchUi.loadResource(Rez.Drawables[rtoDrawBW[Aselect]]);
-dc.drawBitmap((gw/2) - 40, gh/2 - 50, Adraw);
-}
-else {
-var Adraw = WatchUi.loadResource(Rez.Drawables[rtoDraw[Aselect]]);
-dc.drawBitmap((gw/2) - 40, gh/2 - 50, Adraw);}
 MapviewerView.GenerateDest();
 }
 
@@ -507,8 +509,28 @@ MapArr = WatchUi.loadResource(Rez.JsonData[Map[NumPick]]);
 if (generateRoute != null && Map != null && RoutePick != Map.size() && posnInfo != null) {
 
 if (destLat != null && startLat != null){
+if (route.size() > 2){
+var pxOld = null;
+var pyOld = null;
+for (var j=0; j<route.size();j+=2){
+      var long = route[j];
+      var lat = route[j+1];
+      var pixelsLon = (long - startLon) * 40 + (gw/2);
+      var pixelsLat = (startLat - lat) * 40 + (gh/2);
+      
+      var py = pixelsLat.toNumber();
+      var px = pixelsLon.toNumber();
+       if (pxOld != null){ 
+       dc.setPenWidth(3);
 
+    dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_RED);
+               dc.drawLine(pxOld, pyOld, px,py);
+}
 
+   pxOld = px;
+   pyOld = py;
+   
+   }	}
 MapArr = WatchUi.loadResource(Rez.JsonData[Map[RoutePick]]);
 toggle = 0;
 //if (WatchUi has :getSubscreen){
@@ -526,36 +548,45 @@ GenerateRoute();
 
 
 }
-        }
+        
         
 
 if (Map != null && oSBdc != null && NumPick == Map.size() && oSB != null && p != null && startLon != null) {
-   if (posOldY != null){
+
   if (selectedWaypoint != null){
-   uxl = (Lon - p[1]) + projLocx; 
-   uyl = (p[0] - Lat) + projLocy;
+   uxl = ((Lon - startLon) * zoom); 
+   uyl = ((startLat - Lat) * zoom);
   
   }
  else {
-  uxl = ((Lon - p[1]) * zoom + projLocx); 
-  uyl = ((p[0] - Lat) * zoom + projLocy);
+  uxl = ((Lon - p[1]) * zoom); 
+  uyl = ((p[0] - Lat) * zoom);
   }
-  uxr = (uxl + (gh - 20));
-  uyb = (uyl + (gw - 20));
+
   var ux = uxl.toNumber(), uy = uyl.toNumber();
 
    dc.drawBitmap(ux, uy, oSB);  }
  
-    posOldY = p[0];
-	posOldX = p[1];
    
+
+if (NumPick == Map.size() && uxl != null){
+if (uxl >= 120 || uyl >= 120 || uyl <= -97 || uxl <= -80){
+System.println(uxl + ", " + uyl);
+updatePos = 1;
+NumPick = 0;
+MapviewerView.GenerateBitmap();
 }
- 
+
+}
+
+ }
     dc.clearClip();
     
   if (generateRoute == null){
   drawGUI(dc);
   }
+  
+ 
 }
 
 function saveMapArraysToStorage(){
@@ -653,6 +684,7 @@ add = add + 1;
   m = m.toDegrees();
   startLat = m[0];
   startLon = m[1];
+  NumPick = 0;
   minDistanceToStart = 2147483647;
   add = 0;
   
@@ -762,7 +794,6 @@ if (RoutePick != Map.size()){
   m = m.toDegrees();
   startLat = m[0];
   startLon = m[1];
-  
   MapviewerView.GenerateBitmap();
  }
  else {

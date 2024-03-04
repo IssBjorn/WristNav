@@ -5,7 +5,6 @@ import Toybox.Lang;
 import Toybox.WatchUi;
 var setting = 1;
 var projLocy = 0;
-var projLocx = 0;
 var toggle = 0;
 var col = null;
 var id = 0;
@@ -47,7 +46,7 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	startLon = m[1];
      NumPick = 0;
      projLocy = 0;
-     projLocx = 0;
+
      zoom = 10;
      selectedWaypoint = null;
        MapviewerView.GenerateBitmap();
@@ -111,10 +110,11 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
        
         else if (setting == 1) {
     
-    if (projLocx != 200) {
-           projLocx = projLocx + 10;}
-           if (projLocx == 200) {
-           projLocx = 0;}
+           projLocy = projLocy - 1000;
+           if (projLocy <= 0) {
+             projLocy = 500000;
+          }
+   
         }
         else if (setting == 4) {
         var wp = Application.Storage.getValue("waypoint");
@@ -124,26 +124,19 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	else if (setting == 2 && Map != null && NumPick == Map.size()) {
 	oSB = null;
     oSBdc = null;
-    MapviewerView.saveMapArraysToStorage();
 	generateRoute = 1;
-	
 	RoutePick = 0;
 	route = [];
 	var m = Position.getInfo().position;
 	m = m.toDegrees();
 	startLat = m[0];
 	startLon = m[1];
-
-   
-	
     routeToDraw = 1;
-
 	var destination = Application.Storage.getValue("home");
-	startNode = [startLon,startLat];
 	destLat = destination[0];
 	destLon = destination[1];
-	destNode = [destLon,destLat];
-	queue.add(startNode);
+
+
 	
 	
 	
@@ -166,7 +159,7 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	if (selectedWaypoint != null) {
 	oSB = null;
     oSBdc = null;
-    MapviewerView.saveMapArraysToStorage();
+ 
 	generateRoute = 1;
 	RoutePick = 0;
 	route = [];
@@ -232,11 +225,11 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
                 zoom = 10;}}
     else if (setting == 1) {
     
-    
-    if (projLocy != 200) {
-           projLocy = projLocy + 10;}
-           if (projLocy == 200) {
-           projLocy = 0;}
+           projLocy = projLocy + 1000;
+           if (projLocy == 500000) {
+             projLocy = 0;
+             
+          }
         }
      else if (setting == 4) {
         
@@ -245,7 +238,7 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	    
 	else if (setting == 2) {
 	if (posnInfo != null  && NumPick == Map.size() && Map != null){
-	 MapviewerView.saveMapArraysToStorage();
+	
 	oSB = null;
     oSBdc = null;
 	RoutePick = 0;
@@ -262,21 +255,17 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
 	else if (setting == 3) {
 	if (drawWP == null) {
 	drawWP = 1;
-	 NumPick = 0;
-      var m = Position.getInfo().position;
-	m = m.toDegrees();
-	startLat = m[0];
-	startLon = m[1];
-       MapviewerView.GenerateBitmap();}
+	 }
 	else if (drawWP != null) {
 	drawWP = null;
-	 NumPick = 0;
+	
+      }
+	NumPick = 0;
       var m = Position.getInfo().position;
 	m = m.toDegrees();
 	startLat = m[0];
 	startLon = m[1];
-       MapviewerView.GenerateBitmap();}
-	
+       MapviewerView.GenerateBitmap();
 	}
 	
 	
@@ -339,7 +328,8 @@ class CountryAddDelegate extends WatchUi.BehaviorDelegate {
  }
  else if (toggle != 1) {
  toggle = 1;
- }}
+ }
+     WatchUi.requestUpdate();}
         
 
     //This code allows for the same function as the ontap fucntion above but for button watches
@@ -356,22 +346,32 @@ public function pushMapSelect() as Void {
 }
 
 public function pushWaypointSelect() as Void {
-       selectedWaypoint = 1;
        var Waypoint = Application.Storage.getValue("waypoint");
-      if (Waypoint != null) { 
-       if (id1 == Waypoint.size() - 2) {
+       if (Waypoint != null) { 
+       if (selectedWaypoint == null){
        id1 = 0;
-   
+        selectedWaypoint = 1;
        }
+      
        else if (id1 < Waypoint.size() - 2 && Waypoint.size() > 2) {
        id1 = id1+2;
+        selectedWaypoint = 1;
+       System.println("plus2");
        }
-       startLon = Waypoint[id1];
+       else if (id1 == Waypoint.size() - 2) {
+       selectedWaypoint = null;
+       System.println("zero");
+       }
+       
+      
+      
+     startLon = Waypoint[id1];
        startLat = Waypoint[id1+1];
-       NumPick = 0;
-       MapviewerView.GenerateBitmap();}
-         
-}
+      
+     }
+ 
+       WatchUi.requestUpdate();
+       }
 
 }
 class Menu2TestMenu2Delegate extends WatchUi.BehaviorDelegate {
@@ -500,8 +500,9 @@ public function onSelect() as Boolean {
     var Majorarray = Major[j];
      for (var k=0; k<Majorarray.size(); k++){
     Map.add(Majorarray[k]);}}
-    }
-    
+    }   
+        NumPick = 0;
+        MapviewerView.GenerateBitmap();
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         WatchUi.pushView(new MapviewerView(), new CountryAddDelegate(), WatchUi.SLIDE_UP);
        
