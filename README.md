@@ -9,15 +9,14 @@ Offline Map of highways and major roads covering all of Europe and nearby parts 
  * Set waypoints.
  * Show/Hide waypoints on the map.
  * Select waypoint.
- * Route algorithm that takes selected Waypoint (very slow, am looking for a faster algorithm, i'd advise not routing to anywhere further than 60 miles at a time).
- * Zoom functionality.
+ * Route algorithm that takes selected Waypoint/routes to home.
  * Basic Pan functionality (moving the map without your location changing).
  * Delete selected waypoint.
  * Show/Hide Route.
  * Map Selector (You can select and deselect countries from a list and have the ability to select multiple countries, currently deselection has 
    only been tested with one country selected so I wouldn't load more than one country just yet, also its better memory wise and increases the speed of routing to limit country selection.
  * Horizontal Compass.
- * Ui and cions inspired by Pebble Watch design.
+ * Ui and icons inspired by Pebble Watch design.
  
  
 All icons are custom made and are the only part of the app you must provide credit for if you wish to use them from the open source.
