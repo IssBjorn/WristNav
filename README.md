@@ -5,8 +5,8 @@ Features:
 
 Offline Map of highways and major roads covering all of Europe and nearby parts of Asia including Georgia, Turkey, etc. Does not include Russia as coordinate data was too big for it.
 
- * Set a home location.
- * Set waypoints.
+ * Set a home location and route to it.
+ * Set waypoints and route to them.
  * Show/Hide waypoints on the map.
  * Select waypoint.
  * Route algorithm that takes selected Waypoint/routes to home.
